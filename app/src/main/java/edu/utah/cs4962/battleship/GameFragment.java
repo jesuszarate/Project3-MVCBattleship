@@ -20,10 +20,25 @@ public class GameFragment extends Fragment
 
         final BattleGridView battleGridView = new BattleGridView(getActivity(), _playerID);
 
-        for (int cellPosition = 0; cellPosition < (121*2); cellPosition++)
+        int cellPostion = 1;
+        for (int position = 0; position < (121*2); position++)
         {
             CellView cellView = new CellView(getActivity());
-            cellView.setGridPosition(cellPosition);
+
+            // If position % 11 equals 0 then the first row every cell in that row will be equal to a negative number
+            // If position / 11 equals 0 then the first col every cell in that col will be equal to a negative number
+            // if ((position-121)/11 == 0 && position-121 > 0) ensures that the first column in the second grid's cell
+            // are all set equal to a negative number.
+            if(position % 11 == 0 || position/11 == 0 || ((position-121)/11 == 0 && position-121 > 0))
+            {
+                cellView.setGridPosition(-1);
+            }
+            else
+            {
+                cellView.setGridPosition(cellPostion);
+                battleGridView._childrenIndex.put(cellPostion, position);
+                cellPostion++;
+            }
 
             //if(cellPosition % 22 > 10)
             {
@@ -42,6 +57,7 @@ public class GameFragment extends Fragment
                     //c.shipHit();
                 }
             });
+
         }
         return battleGridView;
     }

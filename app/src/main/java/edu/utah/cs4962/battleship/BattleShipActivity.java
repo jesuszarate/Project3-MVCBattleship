@@ -24,7 +24,6 @@ public class BattleShipActivity extends Activity
         LinearLayout rootLayout = new LinearLayout(this);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
 
-
         LinearLayout firstLayout = new LinearLayout(this);
         firstLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -49,7 +48,6 @@ public class BattleShipActivity extends Activity
         secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.MATCH_PARENT, 20
         ));
-
 
         FrameLayout gameLayout = new FrameLayout(this);
         gameLayout.setId(10);

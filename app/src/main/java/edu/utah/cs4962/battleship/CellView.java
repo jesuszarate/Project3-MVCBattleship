@@ -19,10 +19,10 @@ public class CellView extends View
     {
         super(context);
 
-        _ships = new Ships();
-        _ships.myShips.ships.get("Destroyer")[0] = 0;
-        _ships.myShips.ships.get("Destroyer")[1] = 1;
-
+//        _ships = new Ships();
+//        _ships.myShips.ships.get("Destroyer")[0] = 0;
+//        _ships.myShips.ships.get("Destroyer")[1] = 1;
+        _ships = BattleGridView._ships;
         setBackgroundColor(Color.DKGRAY);
     }
 
@@ -46,31 +46,34 @@ public class CellView extends View
     public boolean onTouchEvent(MotionEvent event)
     {
         _onCellTouchListener.onCellTouched(this);
-        //Toast.makeText(getContext(), "" + _gridPosition, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "" + _gridPosition, Toast.LENGTH_SHORT).show();
         return super.onTouchEvent(event);
     }
 
     public void FireMissile(int _playerID)
     {
-        if (_playerID == 1 && _gridPosition % 22 < 11)
+        if (_gridPosition > -1)
         {
-            for (int i = 0; i < _ships.myShips.ships.get("Destroyer").length; i++)
+            if (_playerID == 1 && _gridPosition <= 100)
             {
-                if (_ships.myShips.ships.get("Destroyer")[i] == _gridPosition)
+                for (int i = 0; i < _ships.myShips.ships.get("Destroyer").length; i++)
                 {
-                    setBackgroundColor(Color.RED);
-                    return;
-                } else setBackgroundColor(Color.WHITE);
+                    if (_ships.myShips.ships.get("Destroyer")[i] == (_gridPosition))
+                    {
+                        setBackgroundColor(Color.RED);
+                        return;
+                    } else setBackgroundColor(Color.WHITE);
+                }
             }
-        }
-        else if (_playerID == 2 && _gridPosition % 22 > 10)
-        {
-            for (int i = 0; i < _ships.myShips.ships.get("Destroyer").length; i++)
+            else if (_playerID == 2 && _gridPosition > 120)
             {
-                if (_ships.myShips.ships.get("Destroyer")[i] == _gridPosition)
+                for (int i = 0; i < _ships.myShips.ships.get("Destroyer").length; i++)
                 {
-                    setBackgroundColor(Color.RED);
-                } else setBackgroundColor(Color.WHITE);
+                    if (_ships.myShips.ships.get("Destroyer")[i] == _gridPosition)
+                    {
+                        setBackgroundColor(Color.RED);
+                    } else setBackgroundColor(Color.WHITE);
+                }
             }
         }
     }

@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by jesuszarate on 10/25/14.
@@ -22,25 +24,54 @@ import java.util.ArrayList;
 public class BattleGridView extends ViewGroup
 {
 
-    public static ArrayList<View> _children = new ArrayList<View>();
+    //public static ArrayList<View> _children = new ArrayList<View>();
 
     private Rect _layoutRect;
-
-    private int _childrenNotGone = 0;
+    public HashMap<Integer, Integer> _childrenIndex = new HashMap<Integer, Integer>();
+    //private int _childrenNotGone = 0;
 
     RectF _paletteRect;
+    public static Ships _ships = new Ships();
+    int _playerID;
 
     public BattleGridView(Context context, int PlayerID)
     {
         super(context);
+
+        this._playerID = PlayerID;
+        _ships.setMyShipsRandomly(_playerID);
     }
+
 
     @Override
     protected void dispatchDraw(Canvas canvas)
     {
         super.dispatchDraw(canvas);
 
+
         setBackground(new drawable());
+
+
+        for (int shipPositions : _childrenIndex.values())
+        {
+
+            // TODO: UNCOMMENT ME
+            //getChildAt(shipPositions).setBackgroundColor(Color.DKGRAY);
+
+        }
+
+        for (int[] shipPositions : _ships.myShips.ships.values())
+        {
+            for (int position = 0; position < shipPositions.length; position++)
+            {
+                if (shipPositions[position] > 0)
+                {
+                    int pos = _childrenIndex.get(shipPositions[position]);
+                    getChildAt(pos).setBackgroundColor(Color.DKGRAY);
+//                    getChildAt(shipPositions[position]).setBackgroundColor(Color.DKGRAY);
+                }
+            }
+        }
     }
 
     @Override
@@ -91,7 +122,7 @@ public class BattleGridView extends ViewGroup
     {
         int childWidthMax = 0;
         int childHeightMax = 0;
-        _childrenNotGone = 0;
+        //_childrenNotGone = 0;
         for (int childIndex = 0; childIndex < getChildCount(); childIndex++)
         {
             CellView child = (CellView) getChildAt(childIndex);
@@ -100,12 +131,12 @@ public class BattleGridView extends ViewGroup
             {
                 continue;
             }
-            _children.add(child);
+            //_children.add(child);
 
             childHeightMax = child.getMeasuredHeight();
             childWidthMax = child.getMeasuredWidth();
 
-            _childrenNotGone++;
+            //_childrenNotGone++;
         }
 
         _layoutRect = new Rect();
@@ -120,26 +151,18 @@ public class BattleGridView extends ViewGroup
             View child = getChildAt(childIndex);
             Rect childLayout = new Rect();
 
-            int actualWidth = (getMeasuredWidth() / (22 ));
-            int acutalHeight = (getMeasuredHeight() / (11 ));
+            int actualWidth = (getMeasuredWidth() / (22));
+            int acutalHeight = (getMeasuredHeight() / (11));
 
-            childLayout.left = (childIndex % 22) * (actualWidth);
-
-            childLayout.top = (childIndex / 22) * acutalHeight;
-
-            childLayout.right = ((childIndex % 22) * actualWidth) + actualWidth;
-
-            childLayout.bottom = ((childIndex / 22) * acutalHeight) + acutalHeight;
+            childLayout.left = (childIndex / 11) * (actualWidth);
+            childLayout.top = (childIndex % 11) * acutalHeight;
+            childLayout.right = ((childIndex / 11) * actualWidth) + actualWidth;
+            childLayout.bottom = ((childIndex % 11) * acutalHeight) + acutalHeight;
 
             //           ______________________________________________________________________________________
             // Params -> | First => Row Start | Second => Column Start | Third => Row End| Fourth => Column End|
             //           --------------------------------------------------------------------------------------
-            if(childIndex%11 == 10)
-            {
-                child.layout(childLayout.left, childLayout.top, childLayout.right - 5, childLayout.bottom - 5);
-            }else {
-                child.layout(childLayout.left, childLayout.top, childLayout.right - 5, childLayout.bottom - 5);
-            }
+            child.layout(childLayout.left, childLayout.top, childLayout.right - 5, childLayout.bottom - 5);
         }
     }
 
@@ -152,7 +175,7 @@ public class BattleGridView extends ViewGroup
             paint.setColor(Color.BLACK);
 
             _paletteRect = new RectF();
-            _paletteRect.left = ((getWidth() - getPaddingLeft()) - 10)/2;
+            _paletteRect.left = ((getWidth() - getPaddingLeft()) - 10) / 2;
             _paletteRect.top = getPaddingTop();
             _paletteRect.right = (getWidth() - getPaddingRight());
             _paletteRect.bottom = getHeight() - getPaddingBottom();
