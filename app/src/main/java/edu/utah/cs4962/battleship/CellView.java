@@ -19,11 +19,9 @@ public class CellView extends View
     {
         super(context);
 
-//        _ships = new Ships();
-//        _ships.myShips.ships.get("Destroyer")[0] = 0;
-//        _ships.myShips.ships.get("Destroyer")[1] = 1;
-        _ships = BattleGridView._ships;
-        setBackgroundColor(Color.DKGRAY);
+        //_ships = BattleGridView._ships;
+        setBackgroundColor(Color.BLUE);
+
     }
 
     public int getGridPosition()
@@ -94,58 +92,4 @@ public class CellView extends View
     {
         this._onCellTouchListener = _onCellTouchListener;
     }
-
-    public void shipHit()
-    {
-        setBackgroundColor(Color.RED);
-        invalidate();
-    }
-
-    //    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//
-//        // First four lines are extract the bit mask
-//        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-//        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-//
-//        // Pull the information associated with the Mode.
-//        // -> Unspecified - widthSpec, heightSpec contain no value, usually 0.
-//        int widthSpec = MeasureSpec.getSize(widthMeasureSpec);
-//        int heightSpec = MeasureSpec.getSize(heightMeasureSpec);
-//
-//        int width = getSuggestedMinimumWidth();
-//        int height = getSuggestedMinimumHeight();
-//
-//        if (widthMode == MeasureSpec.AT_MOST){
-//            width = widthSpec;
-//        }
-//        if (heightMode == MeasureSpec.AT_MOST){
-//            height = heightSpec;
-//        }
-//
-//        if (widthMode ==  MeasureSpec.EXACTLY){
-//            width = widthSpec;
-//            height = width;
-//        }
-//        if (heightMode == MeasureSpec.EXACTLY){
-//            height = heightSpec;
-//            width = height;
-//        }
-//
-//        // TODO; RESPECT THE PADDING!
-//        if (width > height && widthMode != MeasureSpec.EXACTLY){
-//            width = height;
-//        }
-//        if (height > width && heightMode != MeasureSpec.EXACTLY){
-//            height = width;
-//        }
-//
-//        // resolveSizeAndState(int size, int measureSpec, int childMeasuredState)
-//        // -> childMeasuredState - boolean asks if you are happy with the size or not.
-//        setMeasuredDimension(resolveSizeAndState(width, widthMeasureSpec,
-//                        width < getSuggestedMinimumWidth() ? MEASURED_STATE_TOO_SMALL: 0),
-//                resolveSizeAndState(height, heightMeasureSpec,
-//                        height < getSuggestedMinimumHeight() ? MEASURED_STATE_TOO_SMALL: 0));
-//    }
-
 }
