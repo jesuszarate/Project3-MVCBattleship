@@ -48,27 +48,7 @@ public class Game
         player1 = new Player(1);
         player2 = new Player(2);
 
-        player1.setOnPlayerWonListener(new Player.OnPlayerWonListener()
-        {
-            @Override
-            public void OnPlayerWon(Player p)
-            {
-                Winner = "PLAYER1 WON!";
-                GameOver = true;
-                _onBattleWonListener.OnBattleWon(Game.this, Winner);
-            }
-        });
 
-        player2.setOnPlayerWonListener(new Player.OnPlayerWonListener()
-        {
-            @Override
-            public void OnPlayerWon(Player p)
-            {
-                Winner = "PLAYER2 WON!";
-                GameOver = true;
-                _onBattleWonListener.OnBattleWon(Game.this, Winner);
-            }
-        });
     }
 
     public Player getPlayer(int playerID)

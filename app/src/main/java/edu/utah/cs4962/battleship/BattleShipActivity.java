@@ -3,7 +3,13 @@ package edu.utah.cs4962.battleship;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +36,13 @@ public class BattleShipActivity extends Activity
     public FragmentManager fragmentManager;
     public GameFragment _gameFragment;
     GameListFragment _gameListFragment;
+    FragmentTransaction _addTransaction;
+
+    LinearLayout secondLayout = null;
+    LinearLayout gameListLayout = null;
+    FrameLayout gameLayout = null;
+
+    LinearLayout.LayoutParams params = null;
 
     Gson _gson = new Gson();
 
@@ -38,108 +51,341 @@ public class BattleShipActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-
         if (savedInstanceState != null)
-        {
             savedInstanceState = null;
-        }
+
         super.onCreate(savedInstanceState);
+
+        if(isTabletDevice(getResources()))
         {
+            TabletMode();
+        }
+        else {
+            PhoneMode();
+        }
+    }
 
-            LinearLayout rootLayout = new LinearLayout(this);
-            rootLayout.setOrientation(LinearLayout.VERTICAL);
+    private void PhoneMode()
+    {
+        LinearLayout rootLayout = new LinearLayout(this);
+        rootLayout.setOrientation(LinearLayout.VERTICAL);
 
-            LinearLayout firstLayout = new LinearLayout(this);
-            firstLayout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout firstLayout = new LinearLayout(this);
+        firstLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-            LinearLayout buttonLayout = new LinearLayout(this);
-            buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
-            firstLayout.addView(buttonLayout, new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-            ));
+        LinearLayout buttonLayout = new LinearLayout(this);
+        buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
+        firstLayout.addView(buttonLayout, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
 
-            _gameFragment = new GameFragment();
-            _gameListFragment = new GameListFragment();
+        _gameFragment = new GameFragment();
+        _gameListFragment = new GameListFragment();
+
+        // Second Layout
+        secondLayout = new LinearLayout(this);
+        secondLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        gameListLayout = new LinearLayout(this);
+        gameListLayout.setId(11);
+        gameListLayout.setBackgroundColor(Color.CYAN);
+
+        gameLayout = new FrameLayout(this);
+        gameLayout.setId(10);
 
 //region NewGameButton
 
-            Button newGameButton = new Button(this);
-            newGameButton.setText("New Game");
-            buttonLayout.addView(newGameButton, new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        Button newGameButton = new Button(this);
+        newGameButton.setText("New Game");
+        buttonLayout.addView(newGameButton, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            newGameButton.setOnClickListener(new View.OnClickListener()
+        newGameButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
             {
-                @Override
-                public void onClick(View view)
-                {
-                    Game newGame = new Game();
+                Game newGame = new Game();
+                // Add the game to the Fragment List.
+                _gameListFragment.AddItemGameToList(newGame);
+            }
+        });
 
-                    // Add the game to the Fragment List.
-                    _gameListFragment.AddItemGameToList(newGame);
+        LinearLayout.LayoutParams backButtonParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        backButtonParams.gravity = Gravity.RIGHT;
+        Button backButton = new Button(this);
+        backButton.setText("Back");
+        buttonLayout.addView(backButton, backButtonParams);
 
-                }
-            });
-
-            _gameListFragment.setOnGameSelectedListener(new GameListFragment.OnGameSelectedListener()
+        backButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
             {
-                @Override
-                public void onGameSelected(GameListFragment gameListFragment, Game g)
-                {
-                    Game game = g;
+                setProperWindowSize(true);
 
-                    _gameFragment.setGame(game);
+                // TODO: Change this if statement to being if it is tablet or phone, instead of a portrait or landscape.
+                //if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+                    showWindow("List");
 
-                }
-            });
+                onPause();
+            }
+        });
 
-            _gameFragment.setOnUpdateGameListListener(new GameFragment.OnUpdateGameListListener()
+        _gameListFragment.setOnGameSelectedListener(new GameListFragment.OnGameSelectedListener()
+        {
+            @Override
+            public void onGameSelected(GameListFragment gameListFragment, Game g)
             {
-                @Override
-                public void OnUpdateGameList(GameFragment gameFragment)
-                {
-                    _gameListFragment.updateList();
-                }
-            });
+                Game game = g;
+
+//                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+                    setProperWindowSize(false);
+
+                _gameFragment.setGame(game);
+
+            }
+        });
+
+        _gameFragment.setOnUpdateGameListListener(new GameFragment.OnUpdateGameListListener()
+        {
+            @Override
+            public void OnUpdateGameList(GameFragment gameFragment)
+            {
+                _gameListFragment.updateList();
+            }
+        });
 
 //endregion NewGameButton
 
-            // Second Layout
-            LinearLayout secondLayout = new LinearLayout(this);
-            secondLayout.setOrientation(LinearLayout.HORIZONTAL);
+//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+//        {
+            secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 100
+            ));
 
-            LinearLayout gameListLayout = new LinearLayout(this);
-            gameListLayout.setId(11);
+            params = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 0);
+//        } else
+//        {
+//            secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
+//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 20
+//            ));
+//
+//            params = new LinearLayout.LayoutParams(
+//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 80);
+//        }
+        secondLayout.addView(gameLayout, params);
+
+
+        fragmentManager = getFragmentManager();
+        _addTransaction = fragmentManager.beginTransaction();
+
+        _addTransaction.add(10, _gameFragment);//.addToBackStack("Game");
+
+        _addTransaction.add(11, _gameListFragment);//.addToBackStack("GameList");
+
+        _addTransaction.commit();
+
+        rootLayout.addView(firstLayout, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+
+        rootLayout.addView(secondLayout, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 90
+        ));
+        setContentView(rootLayout);
+    }
+
+    private void TabletMode()
+    {
+        LinearLayout rootLayout = new LinearLayout(this);
+        rootLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout firstLayout = new LinearLayout(this);
+        firstLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        LinearLayout buttonLayout = new LinearLayout(this);
+        buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
+        firstLayout.addView(buttonLayout, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+
+        _gameFragment = new GameFragment();
+        _gameListFragment = new GameListFragment();
+
+        // Second Layout
+        secondLayout = new LinearLayout(this);
+        secondLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        gameListLayout = new LinearLayout(this);
+        gameListLayout.setId(11);
+        gameListLayout.setBackgroundColor(Color.CYAN);
+
+        gameLayout = new FrameLayout(this);
+        gameLayout.setId(10);
+
+//region NewGameButton
+
+        Button newGameButton = new Button(this);
+        newGameButton.setText("New Game");
+        buttonLayout.addView(newGameButton, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        newGameButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Game newGame = new Game();
+                // Add the game to the Fragment List.
+                _gameListFragment.AddItemGameToList(newGame);
+            }
+        });
+
+//        LinearLayout.LayoutParams backButtonParams = new LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        backButtonParams.gravity = Gravity.RIGHT;
+//        Button backButton = new Button(this);
+//        backButton.setText("Back");
+//        buttonLayout.addView(backButton, backButtonParams);
+//
+//        backButton.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                setProperWindowSize(true);
+//
+//              // TODO: Change this if statement to being if it is tablet or phone, instead of a portrait or landscape.
+//              if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+//                showWindow("List");
+//
+//                onPause();
+//            }
+//        });
+
+        _gameListFragment.setOnGameSelectedListener(new GameListFragment.OnGameSelectedListener()
+        {
+            @Override
+            public void onGameSelected(GameListFragment gameListFragment, Game g)
+            {
+                Game game = g;
+
+//                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+//                    setProperWindowSize(false);
+
+                _gameFragment.setGame(game);
+
+            }
+        });
+
+        _gameFragment.setOnUpdateGameListListener(new GameFragment.OnUpdateGameListListener()
+        {
+            @Override
+            public void OnUpdateGameList(GameFragment gameFragment)
+            {
+                _gameListFragment.updateList();
+            }
+        });
+
+//endregion NewGameButton
+
+//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+//        {
+//            secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
+//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 100
+//            ));
+//
+//            params = new LinearLayout.LayoutParams(
+//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 0);
+//        } else
+//        {
             secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 20
             ));
 
-            FrameLayout gameLayout = new FrameLayout(this);
-            gameLayout.setId(10);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            params = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 80);
-            secondLayout.addView(gameLayout, params);
+//        }
+        secondLayout.addView(gameLayout, params);
 
 
-            fragmentManager = getFragmentManager();
-            FragmentTransaction addTransaction = fragmentManager.beginTransaction();
+        fragmentManager = getFragmentManager();
+        _addTransaction = fragmentManager.beginTransaction();
 
-            addTransaction.add(10, _gameFragment);//.addToBackStack("Game");
+        _addTransaction.add(10, _gameFragment);//.addToBackStack("Game");
 
-            addTransaction.add(11, _gameListFragment);//.addToBackStack("GameList");
+        _addTransaction.add(11, _gameListFragment);//.addToBackStack("GameList");
 
-            addTransaction.commit();
+        _addTransaction.commit();
 
+        rootLayout.addView(firstLayout, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
 
-            rootLayout.addView(firstLayout, new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
-            ));
+        rootLayout.addView(secondLayout, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 90
+        ));
+        setContentView(rootLayout);
+    }
 
-            rootLayout.addView(secondLayout, new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 0, 90
-            ));
-            setContentView(rootLayout);
+    private void showWindow(String whatWindow)
+    {
+        if (whatWindow.equals("List"))
+        {
+            gameListLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 100));
+
+            gameLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 0));
+
+        } else if(whatWindow.equals("Fragment"))
+        {
+            gameListLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 0));
+
+            gameLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 100));
         }
+    }
+
+    public void setProperWindowSize(boolean isListView)
+    {
+        if (!isListView)
+        {
+            gameListLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 0));
+
+            gameLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 100));
+
+        } else
+        {
+            gameListLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 20));
+
+            gameLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 80));
+        }
+
+    }
+
+    private boolean isTabletDevice(Resources resources) {
+        int screenLayout = resources.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        boolean isScreenLarge = (screenLayout == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        boolean isScreenXlarge = (screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+        return (isScreenLarge || isScreenXlarge);
+    }
+
+    public void startGameFragment()
+    {
+        _addTransaction = fragmentManager.beginTransaction();
+        _addTransaction.replace(10, _gameFragment);
+
+        _addTransaction.addToBackStack(null);
+        _addTransaction.commit();
     }
 
     @Override

@@ -33,26 +33,14 @@ public class GameListFragment extends Fragment implements ListAdapter
 
     public void setGameList(ArrayList<Game> gameList)
     {
-//        this._gameList = gameList;
-//        this._gameList = GameCollection.getInstance()._gamelist;
-
         if(GameCollection.getInstance().getGamelist().size() == 0)
         {
             for (Game g : gameList)
             {
                 GameCollection.getInstance().addGame(g);
             }
-            //this._gameList = GameCollection.getInstance().getGamelist();
         }
     }
-
-//    public void addGames(ArrayList<Game> gameList)
-//    {
-//        setGameList();
-//        gameListView.invalidateViews();
-//    }
-    //region Listeners
-
 
     //region GameSelectedListener
 
@@ -76,10 +64,6 @@ public class GameListFragment extends Fragment implements ListAdapter
 
 
     //endregion Listeners
-
-    public GameListFragment(){
-        //_gameList = new ArrayList<Game>();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -105,19 +89,9 @@ public class GameListFragment extends Fragment implements ListAdapter
                     view.setBackgroundColor(SELECTED_ITEM_COLOR);
                     _onGameSelectedListener.onGameSelected(GameListFragment.this,
                             GameCollection.getInstance().getGamelist().get(i));
-
                 }
             }
         });
-
-//        if (_gameList == null)
-//        {
-//            _gameList = new ArrayList<Game>();
-//        }
-
-        //_gameList.add(new Game());
-//        _gameList.add(new Game());
-//        _gameList.add(new Game());
 
         return gameListView;
     }
@@ -161,11 +135,6 @@ public class GameListFragment extends Fragment implements ListAdapter
     @Override
     public int getCount()
     {
-//        if (_gameList == null)
-//        {
-//            _gameList = new ArrayList<Game>();
-//        }
-
         return GameCollection.getInstance().getGamelist().size();
     }
 

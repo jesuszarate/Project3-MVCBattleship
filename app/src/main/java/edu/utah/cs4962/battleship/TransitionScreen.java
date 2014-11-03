@@ -22,7 +22,13 @@ public class TransitionScreen extends Activity
         super.onCreate(savedInstanceState);
 
         if (getIntent().hasExtra(BattleShipActivity.PLAYERS_TURN)) {
+            _playersTurn = _playersTurn == BattleShipActivity.PLAYERS_TURN ?
+                    BattleShipActivity.PLAYERS_TURN : BattleShipActivity.PLAYERS_TURN;
+
             _playersTurn = getIntent().getExtras().getString(BattleShipActivity.PLAYERS_TURN);
+
+            _playersTurn = _playersTurn.equals(GameFragment.PlayerOne)
+                    ? GameFragment.PlayerTwo : GameFragment.PlayerOne;
         }
 
         LinearLayout rootLayout = new LinearLayout(this);

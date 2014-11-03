@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,8 +21,8 @@ public class GameFragment extends Fragment
     final public int _player2ID = 2;
     Game _game;
 
-    final String PlayerOne = "PLAYER 1";
-    final String PlayerTwo = "PLAYER 2";
+    static final String PlayerOne = "PLAYER 1";
+    static final String PlayerTwo = "PLAYER 2";
 
     final static public int PLAYER1 = 1;
     final static public int PLAYER2 = 2;
@@ -36,7 +34,6 @@ public class GameFragment extends Fragment
     public boolean _allowedToTouch = true;
 
     Timer timer = new Timer();
-
 
 
     //region Listeners
@@ -61,6 +58,7 @@ public class GameFragment extends Fragment
     {
         public void OnUpdateGameList(GameFragment gameFragment);
     }
+
     OnUpdateGameListListener _onUpdateGameListListener = null;
 
     public void setOnUpdateGameListListener(OnUpdateGameListListener onUpdateGameListListener)
@@ -78,15 +76,6 @@ public class GameFragment extends Fragment
         player2 = _game.getPlayer(PLAYER2);
         _playersTurn = _game.getPlayersTurn();
         _allowedToTouch = true;
-
-        _game.setOnBattleWonListener(new Game.OnBattleWonListener()
-        {
-            @Override
-            public void OnBattleWon(Game game, String Winner)
-            {
-                Toast.makeText(getActivity(), Winner, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -94,126 +83,6 @@ public class GameFragment extends Fragment
     {
         battleGridView = new BattleGridView(getActivity(), _player1ID);
 
-//        int cellPostion = 0;
-//        for (int position = 0; position < 200; position++)
-//        {
-//            CellView cellView = new CellView(getActivity());
-//
-//            // If position % 11 equals 0 then the first row every cell in that row will be equal to a negative number
-//            // If position / 11 equals 0 then the first col every cell in that col will be equal to a negative number
-//            // if ((position-121)/11 == 0 && position-121 > 0) ensures that the first column in the second grid's cell
-//            // are all set equal to a negative number.
-////            if (position % 11 == 0 || position / 11 == 0 || ((position - 121) / 11 == 0 && position - 121 > 0))
-////            {
-////                cellView.setGridPosition(-1);
-////            } else
-//
-//            cellView.setGridPosition(cellPostion);
-//
-//            battleGridView._childrenIndex.put(cellPostion, position);
-//
-//            cellPostion++;
-//
-//            battleGridView.addView(cellView, 55, 55);
-//            cellView.setOnCellTouchListener(new CellView.OnCellTouchListener()
-//            {
-//                @Override
-//                public void onCellTouched(CellView c)
-//                {
-//
-//                    if (c.getGridPosition() <= 100)
-//                    {
-//                        // TODO: let the oponent player know that it has been shot at.
-//                        // TODO: MAKE SURE TO NOTE WHICH PLAYER IS WHICH
-//                        if (_playersTurn == PLAYER1 && _allowedToTouch)
-//                        {
-//                            int p = c.getGridPosition();
-//                            //if (p > 0)
-//                            {
-//                                _allowedToTouch = false;
-//                                _game.getPlayer(PLAYER1).LaunchMissile(c.getGridPosition());
-//
-//                            }
-//                        } else if (_playersTurn == PLAYER2 && _allowedToTouch)
-//                        {
-//                            int p = c.getGridPosition();
-//                            //if (p > 0)
-//                            {
-//                                _allowedToTouch = false;
-//                                _game.getPlayer(PLAYER2).LaunchMissile(c.getGridPosition());
-//                            }
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//        battleGridView.switchPlayersBattleGrid(player1, player2);
-//
-//        //region <Fire Missiles>
-//        player1.setOnMissileFiredListener(new Player.OnMissileFiredListener()
-//        {
-//            @Override
-//            public void OnMissileFired(Player p, int cell)
-//            {
-//                //player1.addMyAttackToOponentGrid(cell);
-//                player2.OponentFiredMissile(cell);
-//            }
-//        });
-//
-//
-//        player2.setOnMissileFiredListener(new Player.OnMissileFiredListener()
-//        {
-//            @Override
-//            public void OnMissileFired(Player p, int cell)
-//            {
-//                player1.OponentFiredMissile(cell);
-//            }
-//        });
-//
-//        //endregion <Fire Missiles>
-//
-//
-//        //region Missile Attack Result
-//        player1.setOnMissileAttackResultListener(new Player.OnMissileAttackResultListener()
-//        {
-//            @Override
-//            public void OnMissileAttackResult(Player p, int cell, String hitMiss)
-//            {
-//                if (hitMiss.equals(Player.HIT))
-//                {
-//                    battleGridView.cellHit(cell);
-//                    player2.updateAttackResult(cell, GameModel.HIT);
-//
-//                    _allowedToTouch = true;
-//                } else //if (hitMiss.equals(Player.MISS))
-//                {
-//                    battleGridView.cellMiss(cell);
-//                    player2.updateAttackResult(cell, GameModel.MISS);
-//
-//                    timer.schedule(new SwitchPlayerTask(), 2000);
-//                }
-//            }
-//        });
-//        player2.setOnMissileAttackResultListener(new Player.OnMissileAttackResultListener()
-//        {
-//            @Override
-//            public void OnMissileAttackResult(Player p, int cell, String hitMiss)
-//            {
-//                if (hitMiss.equals(Player.HIT))
-//                {
-//                    battleGridView.cellHit(cell);
-//                    player1.updateAttackResult(cell, GameModel.HIT);
-//                    _allowedToTouch = true;
-//                } else //if (hitMiss.equals(Player.MISS))
-//                {
-//                    battleGridView.cellMiss(cell);
-//                    player1.updateAttackResult(cell, GameModel.MISS);
-//
-//                    timer.schedule(new SwitchPlayerTask(), 2000);
-//                }
-//            }
-//        });
-//        //endregion Missile Attack Result
         return battleGridView;
     }
 
@@ -238,8 +107,10 @@ public class GameFragment extends Fragment
                 @Override
                 public void onCellTouched(CellView c)
                 {
-                        if (c.getGridPosition() <= 100 && !_game.GameOver)
+                    if (c.getGridPosition() <= 100 && !_game.GameOver)
                     {
+                        //if (c.getSolidColor() != Color.WHITE && c.getSolidColor() != Color.RED)
+//                        {
                         if (_game.getPlayersTurn() == PLAYER1 && _allowedToTouch)
                         {
                             _allowedToTouch = false;
@@ -249,13 +120,20 @@ public class GameFragment extends Fragment
                         {
                             _allowedToTouch = false;
                             _game.getPlayer(PLAYER2).LaunchMissile(c.getGridPosition());
-
                         }
+//                        }
                     }
                 }
             });
         }
-        battleGridView.switchPlayersBattleGrid(player1, player2);
+
+        if (_playersTurn == 1)
+        {
+            battleGridView.switchPlayersBattleGrid(player1, player2);
+        } else
+        {
+            battleGridView.switchPlayersBattleGrid(player2, player1);
+        }
 
         //region <Fire Missiles>
         player1.setOnMissileFiredListener(new Player.OnMissileFiredListener()
@@ -280,6 +158,27 @@ public class GameFragment extends Fragment
 
         //endregion <Fire Missiles>
 
+        //region MissileAlreadyFiredAtThisPosition
+
+        player1.setMissileAlreadyFiredAtThisPositionListener(new Player.OnMissileAlreadyFiredAtThisPositionListener()
+        {
+            @Override
+            public void OnMissileAlreadyFiredAtThisPosition()
+            {
+                _allowedToTouch = true;
+            }
+        });
+
+        player2.setMissileAlreadyFiredAtThisPositionListener(new Player.OnMissileAlreadyFiredAtThisPositionListener()
+        {
+            @Override
+            public void OnMissileAlreadyFiredAtThisPosition()
+            {
+                _allowedToTouch = true;
+            }
+        });
+
+        //endregion MissileAlreadyFiredAtThisPosition
 
         //region Missile Attack Result
         player1.setOnMissileAttackResultListener(new Player.OnMissileAttackResultListener()
@@ -328,6 +227,32 @@ public class GameFragment extends Fragment
         });
         //endregion Missile Attack Result
 
+        //region PlayerWon
+
+        player1.setOnPlayerWonListener(new Player.OnPlayerWonListener()
+        {
+            @Override
+            public void OnPlayerWon(Player p)
+            {
+                _game.Winner = "PLAYER1 WON!";
+                _game.GameOver = true;
+
+            }
+        });
+
+        player2.setOnPlayerWonListener(new Player.OnPlayerWonListener()
+        {
+            @Override
+            public void OnPlayerWon(Player p)
+            {
+                _game.Winner = "PLAYER2 WON!";
+                _game.GameOver = true;
+                Toast.makeText(getActivity(), _game.Winner, Toast.LENGTH_SHORT).show();
+//                _onBattleWonListener.OnBattleWon(Game.this, Winner);
+            }
+        });
+
+        //endregion PlayerWon
     }
 
 
@@ -354,6 +279,12 @@ public class GameFragment extends Fragment
             Player currentPlayer = getPlayersTurn(_playersTurn);
             Player oponentPlayer = getOponent(_playersTurn);
             battleGridView.switchPlayersBattleGrid(currentPlayer, oponentPlayer);
+
+            String ActivityLabel = _playersTurn == PLAYER1 ? PlayerOne : PlayerTwo;
+            getActivity().setTitle(ActivityLabel);
+
+            _onUpdateGameListListener.OnUpdateGameList(GameFragment.this);
+
         }
     }
 

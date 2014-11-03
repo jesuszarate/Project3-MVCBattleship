@@ -86,6 +86,20 @@ public class Player
     }
     //endregion MissileAttackResultListener
 
+
+    //region MissileAlreadyFiredAtThisPositionListener
+
+    public interface OnMissileAlreadyFiredAtThisPositionListener{
+        public void OnMissileAlreadyFiredAtThisPosition();
+    }
+    OnMissileAlreadyFiredAtThisPositionListener _onMissileAlreadyFiredAtThisPositionListener = null;
+
+    public void setMissileAlreadyFiredAtThisPositionListener(OnMissileAlreadyFiredAtThisPositionListener onMissileAlreadyFiredAtThisPositionListener)
+    {
+        this._onMissileAlreadyFiredAtThisPositionListener = onMissileAlreadyFiredAtThisPositionListener;
+    }
+    //endregion MissileAlreadyFiredAtThisPositionListener
+
     //endregion
 
     public Player(int playerID)
@@ -131,6 +145,9 @@ public class Player
         {
             PlayersMissilesFired++;
             _onMissileFiredListener.OnMissileFired(this, cell);
+        }
+        else {
+            _onMissileAlreadyFiredAtThisPositionListener.OnMissileAlreadyFiredAtThisPosition();
         }
     }
 
