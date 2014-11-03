@@ -109,8 +109,6 @@ public class GameFragment extends Fragment
                 {
                     if (c.getGridPosition() <= 100 && !_game.GameOver)
                     {
-                        //if (c.getSolidColor() != Color.WHITE && c.getSolidColor() != Color.RED)
-//                        {
                         if (_game.getPlayersTurn() == PLAYER1 && _allowedToTouch)
                         {
                             _allowedToTouch = false;
@@ -121,7 +119,6 @@ public class GameFragment extends Fragment
                             _allowedToTouch = false;
                             _game.getPlayer(PLAYER2).LaunchMissile(c.getGridPosition());
                         }
-//                        }
                     }
                 }
             });
@@ -193,7 +190,7 @@ public class GameFragment extends Fragment
                     _onUpdateGameListListener.OnUpdateGameList(GameFragment.this);
 
                     _allowedToTouch = true;
-                } else //if (hitMiss.equals(Player.MISS))
+                } else
                 {
                     battleGridView.cellMiss(cell);
                     player2.updateAttackResult(cell, GameModel.MISS);
@@ -215,7 +212,7 @@ public class GameFragment extends Fragment
                     player1.updateAttackResult(cell, GameModel.HIT);
                     _allowedToTouch = true;
                     _onUpdateGameListListener.OnUpdateGameList(GameFragment.this);
-                } else //if (hitMiss.equals(Player.MISS))
+                } else
                 {
                     battleGridView.cellMiss(cell);
                     player1.updateAttackResult(cell, GameModel.MISS);
@@ -294,7 +291,6 @@ public class GameFragment extends Fragment
     {
         public void run()
         {
-            //_onSwitchPlayerListener.OnSwitchPlayer(GameFragment.this, PlayerOne);
             Intent intent = new Intent(getActivity(), TransitionScreen.class);
 
             if (_game.getPlayersTurn() == Player.Player1ID)

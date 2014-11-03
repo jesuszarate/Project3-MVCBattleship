@@ -56,11 +56,11 @@ public class BattleShipActivity extends Activity
 
         super.onCreate(savedInstanceState);
 
-        if(isTabletDevice(getResources()))
+        if (isTabletDevice(getResources()))
         {
             TabletMode();
-        }
-        else {
+        } else
+        {
             PhoneMode();
         }
     }
@@ -125,9 +125,7 @@ public class BattleShipActivity extends Activity
             {
                 setProperWindowSize(true);
 
-                // TODO: Change this if statement to being if it is tablet or phone, instead of a portrait or landscape.
-                //if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-                    showWindow("List");
+                showWindow("List");
 
                 onPause();
             }
@@ -140,8 +138,7 @@ public class BattleShipActivity extends Activity
             {
                 Game game = g;
 
-//                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-                    setProperWindowSize(false);
+                setProperWindowSize(false);
 
                 _gameFragment.setGame(game);
 
@@ -159,32 +156,22 @@ public class BattleShipActivity extends Activity
 
 //endregion NewGameButton
 
-//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-//        {
-            secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.MATCH_PARENT, 100
-            ));
+        secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 100
+        ));
 
-            params = new LinearLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.MATCH_PARENT, 0);
-//        } else
-//        {
-//            secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
-//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 20
-//            ));
-//
-//            params = new LinearLayout.LayoutParams(
-//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 80);
-//        }
+        params = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 0);
+
         secondLayout.addView(gameLayout, params);
 
 
         fragmentManager = getFragmentManager();
         _addTransaction = fragmentManager.beginTransaction();
 
-        _addTransaction.add(10, _gameFragment);//.addToBackStack("Game");
+        _addTransaction.add(10, _gameFragment);
 
-        _addTransaction.add(11, _gameListFragment);//.addToBackStack("GameList");
+        _addTransaction.add(11, _gameListFragment);
 
         _addTransaction.commit();
 
@@ -244,27 +231,6 @@ public class BattleShipActivity extends Activity
             }
         });
 
-//        LinearLayout.LayoutParams backButtonParams = new LinearLayout.LayoutParams(
-//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        backButtonParams.gravity = Gravity.RIGHT;
-//        Button backButton = new Button(this);
-//        backButton.setText("Back");
-//        buttonLayout.addView(backButton, backButtonParams);
-//
-//        backButton.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                setProperWindowSize(true);
-//
-//              // TODO: Change this if statement to being if it is tablet or phone, instead of a portrait or landscape.
-//              if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-//                showWindow("List");
-//
-//                onPause();
-//            }
-//        });
 
         _gameListFragment.setOnGameSelectedListener(new GameListFragment.OnGameSelectedListener()
         {
@@ -272,9 +238,6 @@ public class BattleShipActivity extends Activity
             public void onGameSelected(GameListFragment gameListFragment, Game g)
             {
                 Game game = g;
-
-//                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-//                    setProperWindowSize(false);
 
                 _gameFragment.setGame(game);
 
@@ -292,32 +255,22 @@ public class BattleShipActivity extends Activity
 
 //endregion NewGameButton
 
-//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-//        {
-//            secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
-//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 100
-//            ));
-//
-//            params = new LinearLayout.LayoutParams(
-//                    0, ViewGroup.LayoutParams.MATCH_PARENT, 0);
-//        } else
-//        {
-            secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.MATCH_PARENT, 20
-            ));
+        secondLayout.addView(gameListLayout, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 20
+        ));
 
-            params = new LinearLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.MATCH_PARENT, 80);
-//        }
+        params = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 80);
+
         secondLayout.addView(gameLayout, params);
 
 
         fragmentManager = getFragmentManager();
         _addTransaction = fragmentManager.beginTransaction();
 
-        _addTransaction.add(10, _gameFragment);//.addToBackStack("Game");
+        _addTransaction.add(10, _gameFragment);
 
-        _addTransaction.add(11, _gameListFragment);//.addToBackStack("GameList");
+        _addTransaction.add(11, _gameListFragment);
 
         _addTransaction.commit();
 
@@ -341,7 +294,7 @@ public class BattleShipActivity extends Activity
             gameLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 0));
 
-        } else if(whatWindow.equals("Fragment"))
+        } else if (whatWindow.equals("Fragment"))
         {
             gameListLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 0));
@@ -372,7 +325,8 @@ public class BattleShipActivity extends Activity
 
     }
 
-    private boolean isTabletDevice(Resources resources) {
+    private boolean isTabletDevice(Resources resources)
+    {
         int screenLayout = resources.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         boolean isScreenLarge = (screenLayout == Configuration.SCREENLAYOUT_SIZE_LARGE);
         boolean isScreenXlarge = (screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE);

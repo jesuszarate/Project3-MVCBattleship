@@ -35,15 +35,16 @@ public class TransitionScreen extends Activity
         rootLayout.setOrientation(LinearLayout.VERTICAL);
 
         TextView playerTurnText = new TextView(this);
-        playerTurnText.setText(_playersTurn);
-        playerTurnText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        playerTurnText.setText(_playersTurn + "'s Turn");
+        playerTurnText.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 90);
 
         params.gravity = Gravity.CENTER_HORIZONTAL;
         rootLayout.addView(playerTurnText, params);
 
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 10);
+        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 10);
         params.gravity = Gravity.BOTTOM;
 
         Button okButton = new Button(this);

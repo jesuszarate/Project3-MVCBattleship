@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public class GameListFragment extends Fragment implements ListAdapter
 {
 
+    int selectedGame = 0;
     //public static ArrayList<Game> _gameList;
     ListView gameListView;
     private final static int ITEM_COLOR = 0xFF17A090;
@@ -89,10 +90,10 @@ public class GameListFragment extends Fragment implements ListAdapter
                     view.setBackgroundColor(SELECTED_ITEM_COLOR);
                     _onGameSelectedListener.onGameSelected(GameListFragment.this,
                             GameCollection.getInstance().getGamelist().get(i));
+                    selectedGame = i;
                 }
             }
         });
-
         return gameListView;
     }
 
@@ -172,7 +173,10 @@ public class GameListFragment extends Fragment implements ListAdapter
 
         gameInfo.setLayoutParams(params);
 
-        gameInfo.setBackgroundColor(0xFF17A090);
+        if(i != selectedGame)
+            gameInfo.setBackgroundColor(ITEM_COLOR);
+        else
+            gameInfo.setBackgroundColor(SELECTED_ITEM_COLOR);
 
         if (GameCollection.getInstance().getGamelist().get(i).GameOver)
         {
