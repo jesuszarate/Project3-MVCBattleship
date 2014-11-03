@@ -18,10 +18,7 @@ public class CellView extends View
     public CellView(Context context)
     {
         super(context);
-
-        //_ships = BattleGridView._ships;
         setBackgroundColor(Color.BLUE);
-
     }
 
     public int getGridPosition()
@@ -44,36 +41,8 @@ public class CellView extends View
     public boolean onTouchEvent(MotionEvent event)
     {
         _onCellTouchListener.onCellTouched(this);
-        Toast.makeText(getContext(), "" + _gridPosition, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "" + _gridPosition, Toast.LENGTH_SHORT).show();
         return super.onTouchEvent(event);
-    }
-
-    public void FireMissile(int _playerID)
-    {
-        if (_gridPosition > -1)
-        {
-            if (_playerID == 1 && _gridPosition <= 100)
-            {
-                for (int i = 0; i < _ships.myShips.ships.get("Destroyer").length; i++)
-                {
-                    if (_ships.myShips.ships.get("Destroyer")[i] == (_gridPosition))
-                    {
-                        setBackgroundColor(Color.RED);
-                        return;
-                    } else setBackgroundColor(Color.WHITE);
-                }
-            }
-            else if (_playerID == 2 && _gridPosition > 120)
-            {
-                for (int i = 0; i < _ships.myShips.ships.get("Destroyer").length; i++)
-                {
-                    if (_ships.myShips.ships.get("Destroyer")[i] == _gridPosition)
-                    {
-                        setBackgroundColor(Color.RED);
-                    } else setBackgroundColor(Color.WHITE);
-                }
-            }
-        }
     }
 
     public interface OnCellTouchListener

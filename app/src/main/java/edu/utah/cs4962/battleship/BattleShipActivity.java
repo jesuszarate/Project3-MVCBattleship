@@ -10,6 +10,19 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 
 public class BattleShipActivity extends Activity
 {
@@ -18,11 +31,16 @@ public class BattleShipActivity extends Activity
     public GameFragment _gameFragment;
     GameListFragment _gameListFragment;
 
+    Gson _gson = new Gson();
+
+    boolean TransitionScreenUp = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null)
+        {
             savedInstanceState = null;
         }
         super.onCreate(savedInstanceState);
@@ -58,7 +76,7 @@ public class BattleShipActivity extends Activity
                     Game newGame = new Game();
 
                     // Add the game to the Fragment List.
-                    _gameListFragment._gameList.add(newGame);
+                    _gameListFragment.AddItemGameToList(newGame);
 
                 }
             });
@@ -72,8 +90,15 @@ public class BattleShipActivity extends Activity
 
                     _gameFragment.setGame(game);
 
-                    int n = 0;
-                    int k = n + 1;
+                }
+            });
+
+            _gameFragment.setOnUpdateGameListListener(new GameFragment.OnUpdateGameListListener()
+            {
+                @Override
+                public void OnUpdateGameList(GameFragment gameFragment)
+                {
+                    _gameListFragment.updateList();
                 }
             });
 
@@ -105,28 +130,6 @@ public class BattleShipActivity extends Activity
 
             addTransaction.commit();
 
-//        _gameFragment.setOnSwitchPlayerListener(new GameFragment.OnSwitchPlayerListener()
-//        {
-//            @Override
-//            public void OnSwitchPlayer(GameFragment gf, String playersTurn)
-//            {
-//                // TODO: Start a new activity
-//                startTrasitionScreenActivity(playersTurn);
-//            }
-//
-//        });
-
-            //gameFragment.InitializeGame(new Game());
-
-//        gameListFragment.set_onGameSelectedListener(new GameListFragment.OnGameSelectedListener()
-//        {
-//            @Override
-//            public void onGameSelected(GameListFragment gameListFragment)
-//            {
-//              gameFragment.StartGame();
-//            }
-//        });
-
 
             rootLayout.addView(firstLayout, new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -144,12 +147,59 @@ public class BattleShipActivity extends Activity
     {
         super.onResume();
 
+        File filesDir = getFilesDir();
+        try
+        {
+            File file = new File(filesDir, "gameList.txt");
+            FileReader textReader = new FileReader(file);
+
+            BufferedReader bufferedReader = new BufferedReader(textReader);
+            String jsonGameList;
+            jsonGameList = bufferedReader.readLine();
+
+            Type gameListType = new TypeToken<ArrayList<Game>>()
+            {
+            }.getType();
+            ArrayList<Game> gameList = _gson.fromJson(jsonGameList, gameListType);
+
+            _gameListFragment.setGameList(gameList);
+            bufferedReader.close();
+
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
+
+        File filesDir = getFilesDir();
+        String jsonGameList = _gson.toJson(GameCollection.getInstance().getGamelist());
+
+        // Uncomment this line of code to be able to set a fresh version of the app.
+        //String jsonGameList = _gson.toJson(new ArrayList<Game>());
+
+        try
+        {
+            File file = new File(filesDir, "gameList.txt");
+            FileWriter textWriter = null;
+            textWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(textWriter);
+
+
+            bufferedWriter.write(jsonGameList);
+            bufferedWriter.close();
+
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
     }
 

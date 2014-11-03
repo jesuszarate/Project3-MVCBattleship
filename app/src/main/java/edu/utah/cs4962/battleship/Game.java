@@ -11,9 +11,37 @@ public class Game
 
     String Winner;
 
-    //region Listeners
+    boolean GameOver = false;
 
-    //endregion Listeners
+    private int playersTurn = 1;
+
+    //region getter/setters
+    public int getPlayersTurn()
+    {
+        return playersTurn;
+    }
+
+    public void setPlayersTurn(int playersTurn)
+    {
+        this.playersTurn = playersTurn;
+    }
+    //endregion getter/setters
+
+    //region Listeners
+    //region BattleWon Listener
+    public interface OnBattleWonListener
+    {
+        public void OnBattleWon(Game game, String Winner);
+    }
+
+    OnBattleWonListener _onBattleWonListener = null;
+
+    public void setOnBattleWonListener(OnBattleWonListener onBattleWonListener)
+    {
+        this._onBattleWonListener = onBattleWonListener;
+    }
+    //endregion BattleWon Listener
+//endregion Listeners
 
     public Game()
     {
@@ -25,7 +53,20 @@ public class Game
             @Override
             public void OnPlayerWon(Player p)
             {
+                Winner = "PLAYER1 WON!";
+                GameOver = true;
+                _onBattleWonListener.OnBattleWon(Game.this, Winner);
+            }
+        });
 
+        player2.setOnPlayerWonListener(new Player.OnPlayerWonListener()
+        {
+            @Override
+            public void OnPlayerWon(Player p)
+            {
+                Winner = "PLAYER2 WON!";
+                GameOver = true;
+                _onBattleWonListener.OnBattleWon(Game.this, Winner);
             }
         });
     }

@@ -8,6 +8,9 @@ import java.util.HashMap;
  */
 public class Player
 {
+    public static final int Player1ID = 1;
+    public static final int Player2ID = 2;
+
     private int _playerID = -1;
     HashMap<Integer, Integer> _myGameGrid;
     HashMap<Integer, Integer> _oponentGameGrid;

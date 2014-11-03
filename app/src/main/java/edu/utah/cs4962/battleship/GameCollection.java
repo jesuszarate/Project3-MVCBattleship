@@ -1,5 +1,6 @@
 package edu.utah.cs4962.battleship;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,8 @@ import java.util.Map;
  */
 public class GameCollection
 {
-    Map<Integer, GameInfo> _gameInfoMap = new HashMap<Integer, GameInfo>();
+    //Map<Integer, Game> _gameListMap = new HashMap<Integer, Game>();
+    ArrayList<Game> _gamelist = new ArrayList<Game>();
 
     static GameCollection _instance = null;
 
@@ -25,19 +27,24 @@ public class GameCollection
     {
     }
 
-    public GameInfo getGameInfo(int identifier)
+    public ArrayList<Game> getGamelist()
     {
-        return _gameInfoMap.get(identifier);
+        return _gamelist;
     }
 
-    public void addGameInfo(int identifier, GameInfo gameInfo)
+    public Game getGame(int identifier)
     {
-        _gameInfoMap.put(identifier, gameInfo);
+        return _gamelist.get(identifier);
     }
 
-    public void removeGameInfo(int identifier)
+    public void addGame(Game game)
     {
-        _gameInfoMap.remove(identifier);
+        _gamelist.add(game);
+    }
+
+    public void removeGame(int identifier)
+    {
+        _gamelist.remove(identifier);
     }
 
     public class GameInfo

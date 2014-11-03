@@ -6,6 +6,7 @@ import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -15,10 +16,12 @@ public class Ships
 {
     public MyShips myShips;
     public OponentsShips oponentsShips;
-//    final private int LEFT = 0;
+    //    final private int LEFT = 0;
 //    final private int UP = 1;
     final private int RIGHT = 0;
     final private int DOWN = 1;
+
+    HashSet<Integer> takenPositions;
 
     public interface OnMissileFiredListener
     {
@@ -41,6 +44,7 @@ public class Ships
     {
         myShips = new MyShips();
         oponentsShips = new OponentsShips();
+        takenPositions = new HashSet<Integer>();
     }
 
     public String checkIfHit(int cell)
@@ -108,53 +112,94 @@ public class Ships
 
     private void setDestroyer()
     {
-        int position = randomPositionOfShip();
-
-        // Direction =≥ left = 0, up = 1, right = 2, down = 3
-        int direction = randomShipDirection();
-
-        int arrayIndex = 0;
-        //if (playerId == 1)
+        boolean correctPositioning = false;
+        while (correctPositioning == false)
         {
+            int position = randomPositionOfShip();
+
+            int direction = randomShipDirection();
+
+            int arrayIndex = 0;
             switch (direction)
             {
-//                case LEFT:
-//                    getLeftCell("Destroyer", 2, position);
-//                    break;
-//                case UP:
-//                    getTopCell("Destroyer", 2, position, arrayIndex);
-//                    break;
                 case RIGHT:
-                    getRightCell("Destroyer", 2, position, arrayIndex);
+                    correctPositioning = getRightCell("Destroyer", 2, position, arrayIndex);
                     break;
                 case DOWN:
-                    getBottomCell("Destroyer", 2, position, arrayIndex);
+                    correctPositioning = getBottomCell("Destroyer", 2, position, arrayIndex);
                     break;
             }
         }
-//        else
-//        {
-//            for (; position < range; position++)
-//            {
-//                myShips.ships.get("Destroyer")[arrayIndex] = position;
-//                arrayIndex++;
-//            }
-//        }
     }
 
     private void setCruiser()
     {
+        boolean correctPositioning = false;
+        while (correctPositioning == false)
+        {
+            int position = randomPositionOfShip();
 
+            int direction = randomShipDirection();
+
+            int arrayIndex = 0;
+
+            switch (direction)
+            {
+                case RIGHT:
+                    correctPositioning = getRightCell("Cruiser", 3, position, arrayIndex);
+                    break;
+                case DOWN:
+                    correctPositioning = getBottomCell("Cruiser", 3, position, arrayIndex);
+                    break;
+            }
+        }
     }
 
     private void setSubmarine()
     {
+        boolean correctPositioning = false;
+        while (correctPositioning == false)
+        {
+            int position = randomPositionOfShip();
 
+            int direction = randomShipDirection();
+
+            int arrayIndex = 0;
+
+            switch (direction)
+            {
+                case RIGHT:
+                    correctPositioning = getRightCell("Submarine", 3, position, arrayIndex);
+                    break;
+                case DOWN:
+                    correctPositioning = getBottomCell("Submarine", 3, position, arrayIndex);
+                    break;
+            }
+        }
     }
 
     private void setBattleship()
     {
+        boolean correctPositioning = false;
+        while (correctPositioning == false)
+        {
+            int position = randomPositionOfShip();
 
+            int direction = randomShipDirection();
+
+            int arrayIndex = 0;
+
+            switch (direction)
+            {
+                case RIGHT:
+                    correctPositioning = getRightCell("Battleship", 4, position, arrayIndex);
+                    break;
+                case DOWN:
+                    correctPositioning = getBottomCell("Battleship", 4, position, arrayIndex);
+                    break;
+            }
+
+        }
     }
 
     private void setAirCraftCarrier()
@@ -164,65 +209,22 @@ public class Ships
         {
             int position = randomPositionOfShip();
 
-            // Direction =≥ left = 0, up = 1, right = 2, down = 3
             int direction = randomShipDirection();
 
             int arrayIndex = 0;
-            //if (playerId == 1)
+
+            switch (direction)
             {
-                switch (direction)
-                {
-//                case LEFT:
-//                    getLeftCell("AirCraftCarrier", 5, position);
-//                    break;
-//                case UP:
-//                    getTopCell("AirCraftCarrier", 5, position, arrayIndex);
-//                    break;
-                    case RIGHT:
-                        getRightCell("AirCraftCarrier", 5, position, arrayIndex);
-                        break;
-                    case DOWN:
-                        correctPositioning = getBottomCell("AirCraftCarrier", 5, position, arrayIndex);
-                        break;
-                }
+                case RIGHT:
+                    correctPositioning = getRightCell("AirCraftCarrier", 5, position, arrayIndex);
+                    break;
+                case DOWN:
+                    correctPositioning = getBottomCell("AirCraftCarrier", 5, position, arrayIndex);
+                    break;
             }
+
         }
     }
-
-//    // TODO: Keep the ships in bounds.
-//    private void getLeftCell(String shipType, int shipSize, int position)
-//    {
-//        position = checkForCorrectPosition(position, shipSize, LEFT);
-//        int range = position - shipSize;
-//        int pos = position;
-//        int arrayIndex = 0;
-//        for (; position > range; position--)
-//        {
-//            myShips.ships.get(shipType)[arrayIndex] = pos - (arrayIndex * 10);
-//            arrayIndex++;
-//        }
-//    }
-
-//    // TODO: NOT WORKING CORRECTLY, FIX!
-//    private int checkForCorrectPosition(int position, int shipSize, int direction)
-//    {
-//        switch (direction)
-//        {
-//            case LEFT:
-//                if ((position - (shipSize * 10)) < 0)
-//                {
-//                    return (position + shipSize) * 10;
-//                }
-//                break;
-//            case UP:
-//                break;
-//            case RIGHT:
-//                break;
-//            case DOWN:
-//                break;
-//        }
-//        return position;
-//    }
 
     private void getTopCell(String shipType, int shipSize, int position, int arrayIndex)
     {
@@ -238,13 +240,26 @@ public class Ships
     {
         int range = position + shipSize;
         int pos = position;
+        int actualPostion = 0;
         for (; position < range; position++)
         {
             try
             {
-                myShips.ships.get(shipType)[arrayIndex] = pos + (arrayIndex * 10);
+                actualPostion = pos + (arrayIndex * 10);
+                if (actualPostion > 100)
+                {
+                    throw new IndexOutOfBoundsException();
+                }
+
+                if(takenPositions.contains(actualPostion))
+                {
+                   return false;
+                }
+                myShips.ships.get(shipType)[arrayIndex] = actualPostion;
+                takenPositions.add(actualPostion);
                 arrayIndex++;
-            }catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e)
+            {
                 return false;
             }
         }
@@ -257,19 +272,47 @@ public class Ships
         int range = position + shipSize;
         for (; position < range; position++)
         {
+
             try
             {
-                if(position != colRange && (position%9) < (colRange%9)){
+//                if (shipIsNotinThisPosition(position))
+//                {
+//                    throw new IndexOutOfBoundsException();
+//                }
+                if (position != colRange && (position % 10) < (colRange % 10))
+                {
                     throw new IndexOutOfBoundsException();
                 }
+                if (takenPositions.contains(position))
+                {
+                    return false;
+                }
                 myShips.ships.get(shipType)[arrayIndex] = position;
+                takenPositions.add(position);
                 arrayIndex++;
-            }catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e)
+            {
                 return false;
             }
         }
         return true;
     }
+
+    private boolean shipIsNotinThisPosition(int position)
+    {
+        for (int[] ships : myShips.ships.values())
+        {
+            for (int shipPos = 0; shipPos < ships.length; shipPos++)
+            {
+                if (ships[shipPos] == position)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     private Random randomGenerator = new Random(System.currentTimeMillis());
 

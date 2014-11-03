@@ -58,26 +58,7 @@ public class BattleGridView extends ViewGroup
         resetBattleGrid();
         setUpMyGrid(player1);
         setUpOponentsGrid(player1);
-//        for (int cellIndex = 101; cellIndex < getChildCount(); cellIndex++)
-//        {
-//            if(player._myGameGrid.containsKey(cellIndex))
-//            {
-//                int hitMissWater = player._myGameGrid.get(cellIndex);
-//                CellView cellView = (CellView)getChildAt(cellIndex);
-//
-//                if(hitMissWater == GameModel.WATER)
-//                {
-//                    cellView.setBackgroundColor(Color.BLUE);
-//                }
-//                else if (hitMissWater == GameModel.MISS)
-//                {
-//                    cellView.setBackgroundColor(Color.WHITE);
-//                }
-//                else{
-//                    cellView.setBackgroundColor(Color.RED);
-//                }
-//            }
-//        }
+
     }
 
     public void setUpOponentsGrid(Player player)
@@ -112,8 +93,9 @@ public class BattleGridView extends ViewGroup
             {
                 for (int shipPos = 0; shipPos < ship.length; shipPos++)
                 {
+                    int what = ship[shipPos];
                     if (ship[shipPos] > -1)
-                        getChildAt(ship[shipPos] + 99).setBackgroundColor(Color.GRAY);
+                        getChildAt(ship[shipPos] + 100).setBackgroundColor(Color.GRAY);
                 }
             }
 
@@ -143,13 +125,6 @@ public class BattleGridView extends ViewGroup
         catch (Exception e){
             String exp = e.toString();
         }
-//        for (int attack : player._oponentsAttacks)
-//        {
-//            if (attack == GameModel.HIT)
-//            {
-//                getChildAt(attack);
-//            }
-//        }
     }
 
     public void resetBattleGrid()
@@ -168,29 +143,6 @@ public class BattleGridView extends ViewGroup
     protected void dispatchDraw(Canvas canvas)
     {
         super.dispatchDraw(canvas);
-
-        setBackground(new drawable());
-
-        for (int shipPositions : _childrenIndex.values())
-        {
-
-            // TODO: UNCOMMENT ME
-            //getChildAt(shipPositions).setBackgroundColor(Color.DKGRAY);
-
-        }
-
-//        for (int[] shipPositions : _ships.myShips.ships.values())
-//        {
-//            for (int position = 0; position < shipPositions.length; position++)
-//            {
-//                if (shipPositions[position] > 0)
-//                {
-//                    int pos = _childrenIndex.get(shipPositions[position]);
-//                    //getChildAt(_childrenIndex.get(position)).setBackgroundColor(Color.DKGRAY);
-////                    getChildAt(shipPositions[position]).setBackgroundColor(Color.DKGRAY);
-//                }
-//            }
-//        }
     }
 
     @Override
@@ -239,43 +191,11 @@ public class BattleGridView extends ViewGroup
     @Override
     protected void onLayout(boolean b, int i, int i2, int i3, int i4)
     {
-//        int childWidthMax = 0;
-//        int childHeightMax = 0;
-//        //_childrenNotGone = 0;
-//        for (int childIndex = 0; childIndex < getChildCount(); childIndex++)
-//        {
-//            CellView child = (CellView) getChildAt(childIndex);
-//
-//            if (child.getVisibility() == GONE)
-//            {
-//                continue;
-//            }
-//            //_children.add(child);
-//
-//            childHeightMax = child.getMeasuredHeight();
-//            childWidthMax = child.getMeasuredWidth();
-//
-//            //_childrenNotGone++;
-//        }
-//
-//        _layoutRect = new Rect();
-//        _layoutRect.left = getPaddingLeft() + childWidthMax;
-//        _layoutRect.top = getPaddingTop() + childHeightMax;
-//        _layoutRect.right = getWidth() - getPaddingRight() - childWidthMax;
-//        _layoutRect.bottom = getHeight() - getPaddingBottom() - childHeightMax;
         for (int childIndex = 0; childIndex < getChildCount(); childIndex++)
         {
             int cc = getChildCount();
             View child = getChildAt(childIndex);
             Rect childLayout = new Rect();
-
-//            int actualWidth = (getMeasuredWidth() / (22));
-//            int acutalHeight = (getMeasuredHeight() / (11));
-//
-//            childLayout.left = (childIndex / 11) * (actualWidth);
-//            childLayout.top = (childIndex % 11) * acutalHeight;
-//            childLayout.right = ((childIndex / 11) * actualWidth) + actualWidth;
-//            childLayout.bottom = ((childIndex % 11) * acutalHeight) + acutalHeight;
 
             int actualWidth = (getMeasuredWidth() / (20));
             int acutalHeight = (getMeasuredHeight() / (10));
@@ -290,6 +210,11 @@ public class BattleGridView extends ViewGroup
             //           --------------------------------------------------------------------------------------
             child.layout(childLayout.left, childLayout.top, childLayout.right - 5, childLayout.bottom - 5);
         }
+    }
+
+    public void setUpGridBackground()
+    {
+        setBackground(new drawable());
     }
 
     private class drawable extends Drawable

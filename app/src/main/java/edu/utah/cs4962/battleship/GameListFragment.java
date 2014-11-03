@@ -3,12 +3,16 @@ package edu.utah.cs4962.battleship;
 import android.app.Fragment;
 import android.database.DataSetObserver;
 import android.graphics.Color;
-import android.graphics.Region;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,9 +26,36 @@ import java.util.ArrayList;
 public class GameListFragment extends Fragment implements ListAdapter
 {
 
-    ArrayList<Game> _gameList = new ArrayList<Game>();
+    //public static ArrayList<Game> _gameList;
+    ListView gameListView;
+    private final static int ITEM_COLOR = 0xFF17A090;
+    private final static int SELECTED_ITEM_COLOR = 0xFF3AC2B2;
 
+    public void setGameList(ArrayList<Game> gameList)
+    {
+//        this._gameList = gameList;
+//        this._gameList = GameCollection.getInstance()._gamelist;
+
+        if(GameCollection.getInstance().getGamelist().size() == 0)
+        {
+            for (Game g : gameList)
+            {
+                GameCollection.getInstance().addGame(g);
+            }
+            //this._gameList = GameCollection.getInstance().getGamelist();
+        }
+    }
+
+//    public void addGames(ArrayList<Game> gameList)
+//    {
+//        setGameList();
+//        gameListView.invalidateViews();
+//    }
     //region Listeners
+
+
+    //region GameSelectedListener
+
     public interface OnGameSelectedListener
     {
         public void onGameSelected(GameListFragment gameListFragment, Game game);
@@ -41,43 +72,66 @@ public class GameListFragment extends Fragment implements ListAdapter
     {
         this._onGameSelectedListener = _onGameSelectedListener;
     }
+    //endregion GameSelectedListener
+
 
     //endregion Listeners
+
+    public GameListFragment(){
+        //_gameList = new ArrayList<Game>();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
-        ListView gameList = new ListView(getActivity());
-        gameList.setAdapter(this);
-        gameList.setBackgroundColor(Color.LTGRAY);
+        gameListView = new ListView(getActivity());
+        gameListView.setAdapter(this);
+        gameListView.setBackgroundColor(0xFF17A090);
+        gameListView.setDividerHeight(10);
 
-        gameList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+
+        gameListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                if(_onGameSelectedListener != null)
+                if (_onGameSelectedListener != null)
                 {
-                    _onGameSelectedListener.onGameSelected(GameListFragment.this, _gameList.get(i));
+                    for (int childIndex = 0; childIndex <  gameListView.getChildCount(); childIndex++)
+                    {
+                        gameListView.getChildAt(childIndex).setBackgroundColor(ITEM_COLOR);
+                    }
+                    view.setBackgroundColor(SELECTED_ITEM_COLOR);
+                    _onGameSelectedListener.onGameSelected(GameListFragment.this,
+                            GameCollection.getInstance().getGamelist().get(i));
+
                 }
             }
         });
 
-        if (_gameList == null)
-        {
-            _gameList = new ArrayList<Game>();
-        }
-        _gameList.add(new Game());
-        _gameList.add(new Game());
-        _gameList.add(new Game());
+//        if (_gameList == null)
+//        {
+//            _gameList = new ArrayList<Game>();
+//        }
 
-        return gameList;
+        //_gameList.add(new Game());
+//        _gameList.add(new Game());
+//        _gameList.add(new Game());
 
-//        View view = new View(getActivity());
-//        view.setBackgroundColor(Color.GREEN);
-//
-//        return view;
+        return gameListView;
+    }
+
+    public void updateList()
+    {
+        gameListView.invalidateViews();
+    }
+
+
+    public void AddItemGameToList(Game newGame)
+    {
+        GameCollection.getInstance().getGamelist().add(newGame);
+        gameListView.invalidateViews();
     }
 
     @Override
@@ -107,17 +161,18 @@ public class GameListFragment extends Fragment implements ListAdapter
     @Override
     public int getCount()
     {
-        if (_gameList == null)
-        {
-            _gameList = new ArrayList<Game>();
-        }
-        return _gameList.size();
+//        if (_gameList == null)
+//        {
+//            _gameList = new ArrayList<Game>();
+//        }
+
+        return GameCollection.getInstance().getGamelist().size();
     }
 
     @Override
     public Object getItem(int i)
     {
-        return _gameList.get(i);
+        return GameCollection.getInstance().getGamelist().get(i);
     }
 
     @Override
@@ -136,9 +191,31 @@ public class GameListFragment extends Fragment implements ListAdapter
     public View getView(int i, View view, ViewGroup viewGroup)
     {
         TextView gameInfo = new TextView(getActivity());
-        gameInfo.setText("Game " + i + " Player1 Score: " + _gameList.get(i).getPlayer1Score()
-        + " Player2 Score: " + _gameList.get(i).getPlayer2Score());
+        gameInfo.setTextColor(Color.WHITE);
+        ViewGroup.LayoutParams params = gameInfo.getLayoutParams();
 
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        } else {
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+
+        gameInfo.setLayoutParams(params);
+
+        gameInfo.setBackgroundColor(0xFF17A090);
+
+        if (GameCollection.getInstance().getGamelist().get(i).GameOver)
+        {
+            gameInfo.setText("Game " + i + ": " + GameCollection.getInstance().getGamelist().get(i).Winner + "\n" +
+                    "Player1 Score: " + GameCollection.getInstance().getGamelist().get(i).getPlayer1Score() + "\n" +
+                    "Player2 Score: " + GameCollection.getInstance().getGamelist().get(i).getPlayer2Score());
+        } else
+        {
+            gameInfo.setText("Game " + i + ": Player" + GameCollection.getInstance().getGamelist().get(i).getPlayersTurn() + " Turn " + "\n" +
+                    "Player1 Score: " + GameCollection.getInstance().getGamelist().get(i).getPlayer1Score() + "\n" +
+                    "Player2 Score: " + GameCollection.getInstance().getGamelist().get(i).getPlayer2Score());
+        }
         return gameInfo;
     }
 
@@ -157,6 +234,6 @@ public class GameListFragment extends Fragment implements ListAdapter
     @Override
     public boolean isEmpty()
     {
-        return _gameList.size() <= 0;
+        return GameCollection.getInstance().getGamelist().size() <= 0;
     }
 }
