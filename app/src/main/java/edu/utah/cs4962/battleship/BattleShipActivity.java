@@ -350,10 +350,24 @@ public class BattleShipActivity extends Activity
         File filesDir = getFilesDir();
         try
         {
-            File file = new File(filesDir, "gameList.txt");
+            File file = new File(filesDir, "selectedGame.txt");
             FileReader textReader = new FileReader(file);
 
             BufferedReader bufferedReader = new BufferedReader(textReader);
+
+            try
+            {
+                _gameListFragment.selectedGame = Integer.parseInt(bufferedReader.readLine());
+            } catch (Exception e)
+            {
+                String ex = e.toString();
+            }
+            bufferedReader.close();
+
+            file = new File(filesDir, "gameList.txt");
+            textReader = new FileReader(file);
+
+            bufferedReader = new BufferedReader(textReader);
             String jsonGameList;
             jsonGameList = bufferedReader.readLine();
 
@@ -364,6 +378,7 @@ public class BattleShipActivity extends Activity
 
             _gameListFragment.setGameList(gameList);
             bufferedReader.close();
+
 
         } catch (FileNotFoundException e)
         {
@@ -384,7 +399,6 @@ public class BattleShipActivity extends Activity
 
         // Uncomment this line of code to be able to set a fresh version of the app.
         //String jsonGameList = _gson.toJson(new ArrayList<Game>());
-
         try
         {
             File file = new File(filesDir, "gameList.txt");
@@ -392,8 +406,14 @@ public class BattleShipActivity extends Activity
             textWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(textWriter);
 
-
             bufferedWriter.write(jsonGameList);
+            bufferedWriter.close();
+
+            file = new File(filesDir, "selectedGame.txt");
+            textWriter = new FileWriter(file);
+            bufferedWriter = new BufferedWriter(textWriter);
+
+            bufferedWriter.write(_gameListFragment.selectedGame + "");
             bufferedWriter.close();
 
         } catch (IOException e)
